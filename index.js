@@ -13,7 +13,7 @@ const port = process.env.PORT || 4000;
 
 const allowedOrigins = [
   process.env.CLIENT_ORIGIN || "http://127.0.0.1:3000",
-  "http://localhost:3000",
+  "https://school-management-nu-smoky.vercel.app/",
 ];
 
 app.use(
@@ -54,18 +54,24 @@ async function ensureDatabaseSchema() {
       FROM information_schema.columns 
       WHERE table_name = 'classes'
     `);
-    
-    console.log('Classes table columns:', checkClasses.rows.map(r => r.column_name));
-    
+
+    console.log(
+      "Classes table columns:",
+      checkClasses.rows.map((r) => r.column_name),
+    );
+
     // Check students table columns
     const checkStudents = await pool.query(`
       SELECT column_name, data_type 
       FROM information_schema.columns 
       WHERE table_name = 'students'
     `);
-    
-    console.log('Students table columns:', checkStudents.rows.map(r => r.column_name));
-    
+
+    console.log(
+      "Students table columns:",
+      checkStudents.rows.map((r) => r.column_name),
+    );
+
     // Add missing columns if needed - WITHOUT ON CONFLICT
     try {
       await pool.query(`
@@ -82,11 +88,10 @@ async function ensureDatabaseSchema() {
       `);
     } catch (err) {
       // Type might already exist
-      console.log('Type check completed');
+      console.log("Type check completed");
     }
-    
+
     console.log("✅ Database schema check completed");
-    
   } catch (error) {
     console.error("Schema check warning:", error.message);
   }
